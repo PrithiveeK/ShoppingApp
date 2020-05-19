@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/ShoppingApp/static/css/main.53c5aa57.chunk.css",
-    "main.js": "/ShoppingApp/static/js/main.19e3ccc3.chunk.js",
-    "main.js.map": "/ShoppingApp/static/js/main.19e3ccc3.chunk.js.map",
+    "main.js": "/ShoppingApp/static/js/main.f3e47d82.chunk.js",
+    "main.js.map": "/ShoppingApp/static/js/main.f3e47d82.chunk.js.map",
     "runtime-main.js": "/ShoppingApp/static/js/runtime-main.56303ccf.js",
     "runtime-main.js.map": "/ShoppingApp/static/js/runtime-main.56303ccf.js.map",
-    "static/js/2.dbbe9196.chunk.js": "/ShoppingApp/static/js/2.dbbe9196.chunk.js",
-    "static/js/2.dbbe9196.chunk.js.map": "/ShoppingApp/static/js/2.dbbe9196.chunk.js.map",
+    "static/js/2.2b2408ba.chunk.js": "/ShoppingApp/static/js/2.2b2408ba.chunk.js",
+    "static/js/2.2b2408ba.chunk.js.map": "/ShoppingApp/static/js/2.2b2408ba.chunk.js.map",
     "index.html": "/ShoppingApp/index.html",
-    "precache-manifest.265ff5fd1867e5846d72b2cef366f957.js": "/ShoppingApp/precache-manifest.265ff5fd1867e5846d72b2cef366f957.js",
+    "precache-manifest.d65ef8a00e58c8d98a55e8db612f232f.js": "/ShoppingApp/precache-manifest.d65ef8a00e58c8d98a55e8db612f232f.js",
     "service-worker.js": "/ShoppingApp/service-worker.js",
     "static/css/main.53c5aa57.chunk.css.map": "/ShoppingApp/static/css/main.53c5aa57.chunk.css.map",
-    "static/js/2.dbbe9196.chunk.js.LICENSE.txt": "/ShoppingApp/static/js/2.dbbe9196.chunk.js.LICENSE.txt"
+    "static/js/2.2b2408ba.chunk.js.LICENSE.txt": "/ShoppingApp/static/js/2.2b2408ba.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.56303ccf.js",
-    "static/js/2.dbbe9196.chunk.js",
+    "static/js/2.2b2408ba.chunk.js",
     "static/css/main.53c5aa57.chunk.css",
-    "static/js/main.19e3ccc3.chunk.js"
+    "static/js/main.f3e47d82.chunk.js"
   ]
 }
