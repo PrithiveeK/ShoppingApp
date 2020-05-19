@@ -1,0 +1,38 @@
+.icon{
+    width: 25px;
+    height: 25px;
+    background-color: brown;
+    margin: 0 5px;
+    padding: 3px;
+}
+.fav-icon{
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    color: red;
+    background: currentColor;
+    box-shadow: 10px 0;
+    position: relative;
+}
+.fav-icon::before{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 7px;
+    left: 0px;
+    border-style: solid;
+    border-width: 10px 0 0 10px;
+    border-color: currentColor transparent transparent transparent;
+}
+.fav-icon::after{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 7px;
+    left: 10px;
+    border-style: solid;
+    border-width: 10px 10px 0 0;
+    border-color: currentColor transparent transparent transparent;
+}

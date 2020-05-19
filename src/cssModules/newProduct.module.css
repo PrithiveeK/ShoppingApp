@@ -1,0 +1,15 @@
+.body-container{
+    height: calc(100% - 70px);
+}
+.add-item{
+    height: 375px;
+    justify-content: space-around;
+    align-items: center;
+    border: 2px solid #77777777;
+    padding: 30px;
+}
+
+.item-submitter{
+    padding: 5px 10px;
+    background-color: #e0997c66;
+}

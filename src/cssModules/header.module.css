@@ -1,0 +1,11 @@
+.header-container{
+    padding: 10px;
+    height: 64px;
+    align-items: center;
+    box-shadow: 0 1px 10px #00000066;
+}
+.header-title{
+    font-size: 28px;
+}
+
+  
