@@ -1,0 +1,21 @@
+.input-label{
+    margin: 10px 0;
+}
+.inputter{
+    height: 30px;
+    border-bottom: 2px dashed #333;
+}
+.submit-btn{
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #54c054;
+}
+.input-label > span{
+    color: red;
+    font-size: 10px;
+}
+.error{
+    font-size: 16px;
+    color: red;
+    text-align: center;
+}

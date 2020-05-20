@@ -7,5 +7,14 @@
 .header-title{
     font-size: 28px;
 }
-
-  
+.user-container{
+    align-items: center;
+}
+.user{
+    margin: 0 10px;
+    align-items: flex-end;
+}
+.user a{
+    font-size: 12px;
+    color: #00000090;
+}

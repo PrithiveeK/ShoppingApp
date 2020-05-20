@@ -31,7 +31,6 @@
 }
 .product:hover{
     transform: scale(1.05);
-    z-index: 100;
 }
 .product:hover .desc-data{
     opacity: 1;

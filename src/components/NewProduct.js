@@ -5,10 +5,17 @@ class NewProduct extends Component {
     constructor(props){
         super(props);
         this.state = {
-            _id: parseInt(Math.random()*1000),
+            _id: 0,
             productTitle: '',
             productDesc: ''
         }; 
+    }
+    componentDidMount(){
+        let len = JSON.parse(localStorage.getItem('products'));
+        this.setState({
+            ...this.state,
+            _id: len == null ? 0 : len.length
+        });
     }
     changeTitle = (event) => {
         this.setState({
@@ -23,14 +30,20 @@ class NewProduct extends Component {
         });
     }
     addProduct = () =>{
-        localStorage.setItem(`product-${this.state._id}`,JSON.stringify(this.state));
+        let produstDetails = JSON.parse(localStorage.getItem('products')) || [];
+        produstDetails.push(this.state);
+        localStorage.setItem(`products`,JSON.stringify(produstDetails));
+        this.setState({
+            ...this.state,
+            _id: this.state._id+1
+        });
     }
     render() {
         return (
-            <div className={`w_100 d_flex ${style['body-container']}`}>
+            <div className={`w_100 d_flex body_h`}>
                 <form className={`d_flex fd_col m_auto br_8 bs_small ${style['add-item']}`} onSubmit={this.addProduct}>
                     <label className={`fs_24`}>Product Title</label>
-                    <input type="text" value={this.state.productTitle} 
+                    <input type="text" value={this.state.productTitle} className={`fs_24 ${style['input-field']}`}
                     onChange={this.changeTitle} />
                     <label className={`fs_24`}>Product Description</label>
                     <textarea rows="10" cols="50" value={this.state.productDesc} 

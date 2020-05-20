@@ -32,3 +32,9 @@
 .fd_col{
   flex-direction: column;
 }
+.body_h{
+  height: calc(100% - 70px);
+}
+.padd_20{
+  padding: 20px;
+}

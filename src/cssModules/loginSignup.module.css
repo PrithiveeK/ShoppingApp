@@ -1,0 +1,8 @@
+.ls-container{
+    justify-content: space-around;
+    align-items: center;
+}
+.form-container{
+    width: 400px;
+    border: 2px solid #77777777;
+}
