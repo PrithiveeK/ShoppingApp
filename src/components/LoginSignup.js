@@ -8,14 +8,11 @@ class LoginSignup extends Component {
     constructor(props){
         super(props);
         this.state = {
-            userData: {}
+            userData: JSON.parse(localStorage.getItem('users')) || {}
         }
     }
     componentDidMount(){
         localStorage.removeItem('loggedInUser');
-        this.setState({
-            userData: JSON.parse(localStorage.getItem('users')) || {}
-        })
     }
     render() {
         return (

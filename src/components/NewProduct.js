@@ -5,18 +5,12 @@ class NewProduct extends Component {
     constructor(props){
         super(props);
         this.state = {
-            _id: 0,
+            _id: JSON.parse(localStorage.getItem('products'))?.length || 0 ,
             productTitle: '',
             productDesc: ''
         }; 
     }
-    componentDidMount(){
-        let len = JSON.parse(localStorage.getItem('products'));
-        this.setState({
-            ...this.state,
-            _id: len == null ? 0 : len.length
-        });
-    }
+
     changeTitle = (event) => {
         this.setState({
             ...this.state,

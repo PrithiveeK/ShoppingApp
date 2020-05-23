@@ -1,12 +1,139 @@
 .icon{
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     margin: 0 5px;
     padding: 3px;
+    position: relative;
 }
-.add-fav{
+.adder{
     transition: transform 200ms;
 }
-.add-fav:active{
+.adder:active{
     transform: scale(1.3);
 }
+
+.cart-line-1 {
+    width: 15%;
+    height: 7%;
+    position: absolute;
+    left: 8%;
+    top: 25%;
+    -webkit-transform: rotate(5deg);
+    -moz-transform: rotate(5deg);
+    -ms-transform: rotate(5deg);
+    transform: rotate(5deg); 
+    background-color: #000;
+    border-bottom-left-radius: 35%;
+  }
+  
+.cart-line-2 {
+    width: 35%;
+    height: 7%;
+    position: absolute;
+    left: 6%;
+    top: 40%;
+    -webkit-transform: rotate(80deg);
+    -moz-transform: rotate(80deg);
+    -ms-transform: rotate(80deg);
+    transform: rotate(80deg); 
+    background-color: #000;
+  }
+  
+.cart-line-2:before {
+    content: "";
+    width: 120%;
+    height: 100%;
+    position: absolute;
+    left: 45%;
+    top: -280%;
+    -webkit-transform: rotate(-80deg);
+    -moz-transform: rotate(-80deg);
+    -ms-transform: rotate(-80deg);
+    transform: rotate(-80deg); 
+    background-color: inherit;
+}
+  
+.cart-line-2:after {
+    content: "";
+    width: 70%;
+    height: 100%;
+    position: absolute;
+    left: 59%;
+    top: -670%;
+    background-color: inherit;
+    -webkit-transform: rotate(40deg);
+    -moz-transform: rotate(40deg);
+    -ms-transform: rotate(40deg);
+    transform: rotate(40deg); 
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 25%;
+}
+  
+.cart-wheel {
+    width: 12%;
+    height: 12%;
+    background-color: #000;
+    border-radius: 100%;
+    position: absolute;
+    left: 28%;
+    bottom: 20%;
+    box-shadow: 7px 0 0 0.2px;
+}
+.circle{
+    width: 40%;
+    height: 40%;
+    background-color: #333;
+    border-radius: 100%;
+    position: absolute;
+    top: 12%;
+    left: 29%;
+}
+.circle i{
+    position: relative;
+    color: white;
+}
+.add:before{
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    background-color: currentColor;
+    top: 5px;
+    left: 2px;
+}
+.add:after{
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background-color: currentColor;
+    top: 2px;
+    left: 5px
+}
+
+.done:before{
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 2px;
+    background-color: currentColor;
+    top: 6px;
+    left: 2px;
+    transform: rotate(45deg);
+}
+.done:after{
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 7px;
+    background-color: currentColor;
+    top: 3px;
+    left: 6px;
+    transform: rotate(45deg);
+}
+.data{
+    font-size: 8px;
+    display: flex;
+    justify-content: center;
+}
+  
