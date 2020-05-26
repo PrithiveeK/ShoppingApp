@@ -1,12 +1,12 @@
 .product{
     margin: 10px;
     width: 300px;
-    height: 450px;
+    height: max-content;
     transition: transform 200ms;
 }
 
 .product-description{
-    height: 120px;
+    height: max-content;
     background-color: #d2691e4d;
     margin-top: -20px;
     padding: 20px;
@@ -38,4 +38,12 @@
 .purchase-btn{
     background-color: #358d35f3;
     color: #fffaf0;
+    padding: 5px 0;
+    margin: 3px 0;
+}
+.remove-btn{
+    background-color: #ca1a1aaf;
+    color: #fffaf0;
+    margin: 3px 0;
+    padding: 5px 0;
 }

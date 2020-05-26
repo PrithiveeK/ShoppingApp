@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Product from './Product';
 import Header from './Header';
-import style from '../cssModules/shoppingList.module.css';
 
 class ShoppingList extends Component {
     constructor(props){
@@ -44,8 +43,8 @@ class ShoppingList extends Component {
     render() {
         return !this.state.loggedUser ? <Redirect to="/" /> : (
             <React.Fragment>
-                <Header user={this.state.loggedUser}/>
-                <div className={`d_flex ${style['shopping-list']}`}>
+                <Header user={this.state.loggedUser} show={true}/>
+                <div className={`d_flex product-list`}>
                     {this.state.ProductDetails.map(pd=> 
                     <Product key={pd._id} product={pd} 
                     FavCartAdder={[this.addFav, this.removeFav, this.addCart]}/>)}

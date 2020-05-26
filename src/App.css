@@ -2,6 +2,12 @@
   width: 100vw;
   height: 100vh;
 }
+.product-list{
+  margin: 80px auto 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
 .br_8{
   border-radius: 8px;
 }
