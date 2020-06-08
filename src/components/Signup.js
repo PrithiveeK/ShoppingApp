@@ -36,28 +36,27 @@ class Signup extends Component {
     }
     storeUserInfo = (event) =>{
         event.preventDefault();
-        let users = this.props.userData;
-        let ui = {...this.state.userInfo};
-        if(users.hasOwnProperty(ui.userEmail)){
-            this.setState({
-                ...this.state,
-                accExists: true
-            });
-        }
-        else{
-            delete ui.confirmPassword;
-            users[this.state.userInfo.userEmail] = {
-                ...ui,
-                fav: [],
-                cart: []
+        fetch('http://localhost:5000/api/account/signup',{
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json'
+            },
+            body: JSON.stringify(this.state.userInfo)
+        }).then(res=>res.json())
+        .then(data => {
+            if(data.status){
+                localStorage.setItem('loggedInUser',JSON.stringify(data.data));
+                this.setState({
+                    ...this.state,
+                    signUp: true
+                });
+            }else{
+                this.setState({
+                    ...this.state,
+                    accExists: true
+                });
             }
-            localStorage.setItem('users',JSON.stringify(users));
-            localStorage.setItem('loggedInUser',JSON.stringify({...ui,fav:[],cart:[]}));
-            this.setState({
-                ...this.state,
-                signUp: true
-            });
-        }
+        }).catch(err => alert('error!'));
     }
     render() {
         const {userInfo, passMissMatch, dontlet, accExists, signUp} = this.state;

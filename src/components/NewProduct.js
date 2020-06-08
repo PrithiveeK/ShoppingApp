@@ -23,14 +23,24 @@ class NewProduct extends Component {
             productDesc: event.target.value
         });
     }
-    addProduct = () =>{
+    addProduct = (event) =>{
         let produstDetails = JSON.parse(localStorage.getItem('products')) || [];
         produstDetails.push(this.state);
         localStorage.setItem(`products`,JSON.stringify(produstDetails));
+        fetch('http://localhost:5000/api/product/add',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state)
+        }).then(res=>res.json())
+        .then(data=>alert(data.message))
+        .catch(err=>alert('error!'));
         this.setState({
             ...this.state,
             _id: this.state._id+1
         });
+        event.preventDefault();
     }
     render() {
         return (

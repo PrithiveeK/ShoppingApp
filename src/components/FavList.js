@@ -6,13 +6,49 @@ class FavList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            loggedUser: JSON.parse(localStorage.getItem('loggedInUser'))
+            loggedUser: JSON.parse(localStorage.getItem('loggedInUser')),
+            favList: []
         }
     }
+    componentDidMount(){
+        this.getUserFav();
+    }
     componentWillUnmount(){
-        const users = JSON.parse(localStorage.getItem('users'));
-        users[this.state.loggedUser.userEmail] = JSON.parse(localStorage.getItem('loggedInUser'));
-        localStorage.setItem('users', JSON.stringify(users));
+        const currUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        this.updateFav(currUser);
+    }
+    getUserFav = () => {
+        fetch(`http://localhost:5000/api/fav/${this.state.loggedUser._id}/all`,{
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.status)
+            this.setState({
+                ...this.state,
+                favList: data.data
+            });
+            else{
+                alert('error dono');
+            }
+        }).catch(err=>alert('error'));
+    }
+    updateFav = (currUser) =>{
+        fetch(`http://localhost:5000/api/fav/${this.state.loggedUser._id}/update`,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({favList: currUser.fav})
+        }).catch(err=>alert("error!"));
+    }
+
+    updateLoggedUser = (updatedUser)=>{
+        localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
+        this.setState({
+            ...this.state,
+            loggedUser: updatedUser
+        });
     }
     updateLoggedUser = (updatedUser)=>{
         localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
@@ -22,7 +58,7 @@ class FavList extends Component {
     }
     removeFav = (pdId) => {
         let favL = this.state.loggedUser.fav; 
-        const i = favL.findIndex(p=>p._id === pdId);
+        const i = favL.findIndex(p=>p === pdId);
         let updatedUser = this.state.loggedUser;
         updatedUser.fav.splice(i,1);
         this.updateLoggedUser(updatedUser);
@@ -33,7 +69,7 @@ class FavList extends Component {
             <React.Fragment>
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
-                    {this.state.loggedUser.fav.map(fav => 
+                    {this.state.favList.map(fav => 
                         <ProductFC key={fav._id} product={fav}
                         remove={this.removeFav}/>    
                     )}

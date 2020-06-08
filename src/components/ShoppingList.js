@@ -8,15 +8,52 @@ class ShoppingList extends Component {
         super(props);
         this.state = {
             loggedUser: JSON.parse(localStorage.getItem('loggedInUser')),
-            ProductDetails: JSON.parse(localStorage.getItem('products')) || []
+            ProductDetails: []
         }
+    }
+    componentDidMount(){
+       this.updateState();
     }
 
     componentWillUnmount(){
-        const users = JSON.parse(localStorage.getItem('users'));
-        users[this.state.loggedUser.userEmail] = JSON.parse(localStorage.getItem('loggedInUser'));
-        localStorage.setItem('users', JSON.stringify(users));
+        const currUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        this.updateFav(currUser);
+        this.updateCart(currUser);
     }
+
+    updateState = () => {
+        fetch('http://localhost:5000/api/product/all',{
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.status)
+            this.setState({
+                ...this.state,
+                ProductDetails: data.data
+            })
+        }).catch(err=>alert('error!'));
+    }
+
+    updateFav = (currUser) =>{
+        fetch(`http://localhost:5000/api/fav/${1}/update`,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({favList: currUser.fav})
+        }).catch(err=>alert("error!"));
+    }
+    updateCart = (currUser) =>{
+        fetch(`http://localhost:5000/api/cart/${1}/update`,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({cartList: currUser.cart})
+        }).catch(err=>alert("error!"));
+    }
+
     updateLoggedUser = (updatedUser)=>{
         localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
         this.setState({
@@ -26,18 +63,18 @@ class ShoppingList extends Component {
     }
     addFav = (pdId) => {
         let updatedUser = this.state.loggedUser;
-        updatedUser.fav.push(this.state.ProductDetails[pdId]);
+        updatedUser.fav.push(pdId);
         this.updateLoggedUser(updatedUser);
     }
     removeFav = (pdId) => {
-        const i = this.state.loggedUser.fav.findIndex(p=>p._id === this.state.ProductDetails[pdId]._id);
+        const i = this.state.loggedUser.fav.findIndex(p=>p === this.state.ProductDetails[pdId]._id);
         let updatedUser = this.state.loggedUser;
         updatedUser.fav.splice(i,1);
         this.updateLoggedUser(updatedUser);
     }
     addCart = (pdId) => {
         let updatedUser = this.state.loggedUser;
-        updatedUser.cart.push(this.state.ProductDetails[pdId]);
+        updatedUser.cart.push(pdId);
         this.updateLoggedUser(updatedUser);
     }
     render() {

@@ -20,20 +20,31 @@ class Login extends Component {
     }
     validateLogin = (event) => {
         event.preventDefault();
-        let user = this.props.userData[this.state.userEmail];
-        if(!user || user.userPassword !== this.state.userPassword){
-            this.setState({
-                ...this.state,
-                accNExist: true
-            });
-        }
-        else{
-            localStorage.setItem("loggedInUser",JSON.stringify(user));
-            this.setState({
-                ...this.state,
-                logIn: true
-            });
-        }
+        fetch('http://localhost:5000/api/account/login',{
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+                userEmail: this.state.userEmail,
+                userPassword: this.state.userPassword
+            })
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.status && data.success){
+                localStorage.setItem("loggedInUser",JSON.stringify(data.data));
+                this.setState({
+                    ...this.state,
+                    logIn: true
+                });
+            }else{
+                this.setState({
+                    ...this.state,
+                    accNExist: true
+                });
+            }
+        })
+        .catch(err=>alert('error!'));
     }
     render() {
         const {userEmail, userPassword, accNExist, logIn} = this.state;
