@@ -39,7 +39,8 @@ class ShoppingList extends Component {
         fetch(`http://localhost:5000/api/fav/${1}/update`,{
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'client': this.state.loggedUser._id
             },
             body: JSON.stringify({favList: currUser.fav})
         }).catch(err=>alert("error!"));
@@ -48,7 +49,8 @@ class ShoppingList extends Component {
         fetch(`http://localhost:5000/api/cart/${1}/update`,{
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'client': this.state.loggedUser._id
             },
             body: JSON.stringify({cartList: currUser.cart})
         }).catch(err=>alert("error!"));

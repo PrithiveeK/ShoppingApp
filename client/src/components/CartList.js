@@ -20,7 +20,7 @@ class CartList extends Component {
     getUserCart = () => {
         fetch(`http://localhost:5000/api/cart/${this.state.loggedUser._id}/all`,{
             method: 'GET',
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json','client': this.state.loggedUser._id}
         }).then(res=>res.json())
         .then(data=>{
             if(data.status)
@@ -34,7 +34,8 @@ class CartList extends Component {
         fetch(`http://localhost:5000/api/cart/${this.state.loggedUser._id}/update`,{
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'client': this.state.loggedUser._id
             },
             body: JSON.stringify({cartList: currUser.cart})
         }).catch(err=>alert("error!"));

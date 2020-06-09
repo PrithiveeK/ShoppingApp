@@ -5,10 +5,27 @@ class NewProduct extends Component {
     constructor(props){
         super(props);
         this.state = {
-            _id: JSON.parse(localStorage.getItem('products'))?.length || 0 ,
+            trust: false,
             productTitle: '',
             productDesc: ''
         }; 
+    }
+
+    componentDidMount(){
+        fetch('http://localhost:5000/api/product',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'hahaha-token': process.env.AUTH_TOKEN
+            }
+        }).then(res=>res.json())
+        .then(data=>{
+            if(data.trust){
+                this.setState({...this.state,trust:true});
+            }else{
+                this.setState({...this.state,trust:false});
+            }
+        }).catch(err=>{console.log(err);alert("error")});
     }
 
     changeTitle = (event) => {
@@ -30,20 +47,22 @@ class NewProduct extends Component {
         fetch('http://localhost:5000/api/product/add',{
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'hahaha-token': process.env.AUTH_TOKEN
             },
             body: JSON.stringify(this.state)
         }).then(res=>res.json())
-        .then(data=>alert(data.message))
-        .catch(err=>alert('error!'));
-        this.setState({
-            ...this.state,
-            _id: this.state._id+1
-        });
+        .then(data=>{
+            if(data.trust){
+                this.setState({...this.state,trust:true});
+            }else{
+                this.setState({...this.state,trust:false});
+            }
+        }).catch(err=>alert('error!'));
         event.preventDefault();
     }
     render() {
-        return (
+        return !this.state.trust ? <h1>Access Denied</h1> : (
             <div className={`w_100 d_flex body_h`}>
                 <form className={`d_flex fd_col m_auto br_8 bs_small ${style['add-item']}`} onSubmit={this.addProduct}>
                     <label className={`fs_24`}>Product Title</label>

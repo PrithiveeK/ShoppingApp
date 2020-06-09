@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const pool = require('../config/database');
 
+router.use(require('../util/middleware'));
+
 router.put('/:id/update', async (req,res) =>{
     try{
         const { cartList } = req.body;
