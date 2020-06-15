@@ -136,4 +136,10 @@
     display: flex;
     justify-content: center;
 }
-  
+.cart-container{
+    display: flex;
+}
+.cart-container > button {
+    background: none;
+    font-size: 25px;
+}

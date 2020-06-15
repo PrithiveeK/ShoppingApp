@@ -13,12 +13,8 @@ class FavList extends Component {
     componentDidMount(){
         this.getUserFav();
     }
-    componentWillUnmount(){
-        const currUser = JSON.parse(localStorage.getItem('loggedInUser'));
-        this.updateFav(currUser);
-    }
     getUserFav = () => {
-        fetch(`http://localhost:5000/api/fav/${this.state.loggedUser._id}/all`,{
+        fetch(`http://localhost:5000/api/fav/all`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json','client': this.state.loggedUser._id}
         }).then(res=>res.json())
@@ -33,46 +29,35 @@ class FavList extends Component {
             }
         }).catch(err=>alert('error'));
     }
-    updateFav = (currUser) =>{
-        fetch(`http://localhost:5000/api/fav/${this.state.loggedUser._id}/update`,{
-            method: 'PUT',
+
+    removeFav = (prodId) => {
+        fetch(`http://localhost:5000/api/fav/${prodId}/delete`,{
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
             },
-            body: JSON.stringify({favList: currUser.fav})
+            body: JSON.stringify({prodId})
+        }).then(res=>res.json())
+        .then(data=>{
+            if(!data.status)
+                alert("error!")
+            else
+                this.getUserFav();
         }).catch(err=>alert("error!"));
-    }
-
-    updateLoggedUser = (updatedUser)=>{
-        localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
-        this.setState({
-            ...this.state,
-            loggedUser: updatedUser
-        });
-    }
-    updateLoggedUser = (updatedUser)=>{
-        localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
-        this.setState({
-            loggedUser: updatedUser
-        });
-    }
-    removeFav = (pdId) => {
-        let favL = this.state.loggedUser.fav; 
-        const i = favL.findIndex(p=>p === pdId);
-        let updatedUser = this.state.loggedUser;
-        updatedUser.fav.splice(i,1);
-        this.updateLoggedUser(updatedUser);
-        console.log(updatedUser);
     }
     render() {
         return (
             <React.Fragment>
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
-                    {this.state.favList.map(fav => 
+                    {this.state.FavList.length ? (this.state.favList.map(fav => 
                         <ProductFC key={fav._id} product={fav}
                         remove={this.removeFav}/>    
+                    )) : (
+                        <div className={`alert-display d_flex w_100 body_h`}>
+                            <h1 className={`m_auto`}>Empty</h1>
+                        </div>
                     )}
                 </div>
             </React.Fragment>

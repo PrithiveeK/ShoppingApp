@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             userPassword = await bcrypt.hash(userPassword,salt);
             const insertUser = await pool.query(
-                "INSERT INTO users(username,email,password,fav,cart) VALUES($1,$2,$3,'{}','{}') RETURNING *",
+                "INSERT INTO users(username,email,password,fav,cart) VALUES($1,$2,$3) RETURNING *",
                 [userName, userEmail, userPassword]
             );
             res.send({status: true, success:true, data: insertUser.rows[0]});

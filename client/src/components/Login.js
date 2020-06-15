@@ -32,7 +32,11 @@ class Login extends Component {
         }).then(res=>res.json())
         .then(data=>{
             if(data.status && data.success){
-                localStorage.setItem("loggedInUser",JSON.stringify(data.data));
+                localStorage.setItem("loggedInUser",JSON.stringify({
+                    _id: data.data._id,
+                    username: data.data.username
+                }));
+                localStorage.setItem("token","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkxNjg1MTgwfQ.F4g0BUuT178B5gppGuaU96hDPbj7R5AG-87pnHkcqsA");
                 this.setState({
                     ...this.state,
                     logIn: true

@@ -3,12 +3,24 @@ const pool = require('../config/database');
 
 router.use(require('../util/middleware'));
 
-router.put('/:id/update', async (req,res) =>{
+router.get('/all', async (req, res)=>{
     try{
-        const { favList } = req.body;
-        const updateQuery = await pool.query(
-            "UPDATE users SET fav = $1 WHERE _id = $2",
-            [`{${[...favList]}}`,+req.params.id]
+        const favProducts = await pool.query(
+            "SELECT * FROM products WHERE _id IN (SELECT prod_id FROM userfav WHERE user_id = $1)",
+            [+req.header('client')]
+        );
+        res.send({status: true, data: favProducts.rows});
+    }catch(err){
+        console.log(err);
+        res.send({status: false});
+    }
+});
+
+router.post('/:id/update', async (req,res) =>{
+    try{
+        await pool.query(
+            "INSERT INTO userfav(user_id, prod_id) VALUES($1, $2)",
+            [+req.header('client'), +req.body.prodId]
         );
         res.send({status: true, message: 'updated fav!'});
     }catch(err){
@@ -16,21 +28,14 @@ router.put('/:id/update', async (req,res) =>{
         res.send({status: false, message: 'Sorry!, something went wrong'});
     }
 });
-router.get('/:id/all', async (req, res)=>{
+
+router.delete('/:id/delete', async (req, res) => {
     try{
-        const favs = await pool.query(
-            "SELECT fav FROM users WHERE _id = $1",
-            [+req.params.id]
+        await pool.query(
+            "DELETE FROM userfav WHERE prod_id = $1 AND user_id = $2",
+            [+req.params.id, +req.header('client')]
         );
-        if(favs.rows[0].fav === null){
-            res.send({status: true, products: []});
-        }else{
-            const favProducts = await pool.query(
-                "SELECT * FROM products WHERE _id = ANY($1)",
-                [`{${[...favs.rows[0].fav]}}`]
-            );
-            res.send({status: true, data: favProducts.rows});
-        }
+        res.send({status: true});
     }catch(err){
         console.log(err);
         res.send({status: false});

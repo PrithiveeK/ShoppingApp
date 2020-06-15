@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
+import { FilePond, registerPlugin } from 'react-filepond';
+
+import 'filepond/dist/filepond.min.css';
+
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import style from '../cssModules/newProduct.module.css';
+import { Link } from 'react-router-dom';
+
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 class NewProduct extends Component {
     constructor(props){
@@ -7,8 +17,11 @@ class NewProduct extends Component {
         this.state = {
             trust: false,
             productTitle: '',
-            productDesc: ''
-        }; 
+            productDesc: '',
+            files: [],
+            folder: ''
+        };
+        this.addedRef = React.createRef(); 
     }
 
     componentDidMount(){
@@ -16,7 +29,7 @@ class NewProduct extends Component {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'hahaha-token': process.env.AUTH_TOKEN
+                'hahaha-token': localStorage.getItem('token')
             }
         }).then(res=>res.json())
         .then(data=>{
@@ -41,20 +54,27 @@ class NewProduct extends Component {
         });
     }
     addProduct = (event) =>{
-        let produstDetails = JSON.parse(localStorage.getItem('products')) || [];
-        produstDetails.push(this.state);
-        localStorage.setItem(`products`,JSON.stringify(produstDetails));
         fetch('http://localhost:5000/api/product/add',{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'hahaha-token': process.env.AUTH_TOKEN
+                'hahaha-token': localStorage.getItem('token')
             },
             body: JSON.stringify(this.state)
         }).then(res=>res.json())
         .then(data=>{
             if(data.trust){
-                this.setState({...this.state,trust:true});
+                this.addedRef.current.style.display= "flex";
+                setTimeout(()=>
+                this.addedRef.current.style.display= "none"
+                ,2000);
+                this.setState({
+                    trust: true,
+                    productTitle: '',
+                    productDesc: '',
+                    files: [],
+                    folder: ''
+                });
             }else{
                 this.setState({...this.state,trust:false});
             }
@@ -62,18 +82,60 @@ class NewProduct extends Component {
         event.preventDefault();
     }
     render() {
-        return !this.state.trust ? <h1>Access Denied</h1> : (
-            <div className={`w_100 d_flex body_h`}>
-                <form className={`d_flex fd_col m_auto br_8 bs_small ${style['add-item']}`} onSubmit={this.addProduct}>
-                    <label className={`fs_24`}>Product Title</label>
-                    <input type="text" value={this.state.productTitle} className={`fs_24 ${style['input-field']}`}
-                    onChange={this.changeTitle} />
-                    <label className={`fs_24`}>Product Description</label>
-                    <textarea rows="10" cols="50" value={this.state.productDesc} 
-                    onChange={this.changeDesc}/>
-                    <button type='submit' className={`br_8 fs_24 ${style['item-submitter']}`}>Add Product</button>
-                </form>
-            </div>
+        return !this.state.trust ? 
+            (<div className={`alert-display d_flex fd_col w_100 body_h`}>
+                <div className={`m_auto ${style['container']}`}>
+                    <h1>Access Denied</h1>
+                    <Link to='/home'>Switch to User mode</Link>
+                </div>
+            </div>) : (
+            <React.Fragment>
+                <div className={`${style['header-container']} d_flex fd_col`}>
+                    <h1>Shopping</h1>
+                    <Link to='/home'>Switch to User mode</Link>
+                </div>
+                <div className={`w_100 d_flex`}>
+                    <form className={`d_flex fd_col m_auto br_8 bs_small ${style['add-item']}`} onSubmit={this.addProduct}>
+                        <label className={`fs_24`}>Product Title</label>
+                        <input type="text" value={this.state.productTitle} className={`fs_24 ${style['input-field']}`}
+                        onChange={this.changeTitle} />
+                        <label className={`fs_24`}>Product Description</label>
+                        <textarea rows="10" cols="50" value={this.state.productDesc} 
+                        onChange={this.changeDesc}/>
+                        <label className={`fs_24`}>Product Images</label>
+                        <FilePond ref={ref => this.pond = ref}
+                            name="productImg"
+                            files={this.state.files}
+                            allowMultiple={true}
+                            server={{
+                                url: "http://localhost:5000/api/product",
+                                process: {
+                                url: '/img',
+                                method: 'POST',
+                                headers: {'Folder': this.state.folder},
+                                onload: (res)=>{
+                                    this.setState({...this.state, folder: res})
+                                },
+                                onerror: (err)=>console.log(err),
+                                },
+                                revert: null
+                            }}
+                            onupdatefiles={(fileItems) => {
+                                this.setState({
+                                    ...this.state,
+                                    files: fileItems.map(fileItem => fileItem.file)
+                                });
+                            }}>
+                        </FilePond>
+                        <button type='submit' className={`br_8 fs_24 ${style['item-submitter']}`}>Add Product</button>
+                    </form>
+                    <div className={`${style['adding']}`} ref={this.addedRef}>
+                        <div className={`${style['done']}`}>
+                            Added new Product
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
         );
     }
 }

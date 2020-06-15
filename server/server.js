@@ -7,6 +7,8 @@ const cors = require('cors');
 app = express();
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(express.static(__dirname, 'public'));
+
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../client/build')));
     
@@ -21,6 +23,5 @@ app.use('/api/account/signup',apis.signup);
 app.use('/api/fav',apis.fav);
 app.use('/api/cart',apis.cart);
 app.use('/api/product',apis.product);
-
 
 app.listen(5000, ()=>console.log('server started'));

@@ -7,7 +7,9 @@
   flex-wrap: wrap;
   justify-content: space-around;
 }
-
+.filepond--wrapper{
+  width: 100%;
+}
 .br_8{
   border-radius: 8px;
 }
@@ -43,4 +45,8 @@
 }
 .padd_20{
   padding: 20px;
+}
+.alert-display h1{
+  font-size: 50px;
+  color: #77777777;
 }

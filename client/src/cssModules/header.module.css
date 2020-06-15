@@ -8,6 +8,7 @@
     position: fixed;
     top: 0;
     z-index: 100;
+    justify-content: space-between;
 }
 .header-title{
     font-size: 28px;
@@ -19,7 +20,7 @@
     margin: 0 10px;
     align-items: flex-end;
 }
-.user a{
+.header-container a{
     font-size: 12px;
     color: #00000090;
 }

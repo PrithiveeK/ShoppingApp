@@ -13,12 +13,8 @@ class CartList extends Component {
     componentDidMount(){
         this.getUserCart();
     }
-    componentWillUnmount(){
-        const currUser = JSON.parse(localStorage.getItem('loggedInUser'));
-        this.updateCart(currUser);
-    }
     getUserCart = () => {
-        fetch(`http://localhost:5000/api/cart/${this.state.loggedUser._id}/all`,{
+        fetch(`http://localhost:5000/api/cart/all`,{
             method: 'GET',
             headers: {'Content-Type': 'application/json','client': this.state.loggedUser._id}
         }).then(res=>res.json())
@@ -30,37 +26,34 @@ class CartList extends Component {
             });
         });
     }
-    updateCart = (currUser) =>{
-        fetch(`http://localhost:5000/api/cart/${this.state.loggedUser._id}/update`,{
-            method: 'PUT',
+    removeCart = (prodId) => {
+        fetch(`http://localhost:5000/api/cart/${prodId}/delete`,{
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
             },
-            body: JSON.stringify({cartList: currUser.cart})
+            body: JSON.stringify({prodId})
+        }).then(res=>res.json())
+        .then(data=>{
+            if(!data.status)
+                alert("error!")
+            else
+                this.getUserCart();
         }).catch(err=>alert("error!"));
-    }
-    updateLoggedUser = (updatedUser)=>{
-        localStorage.setItem('loggedInUser',JSON.stringify(updatedUser));
-        this.setState({
-            loggedUser: updatedUser
-        });
-    }
-    removeCart = (pdId) => {
-        let cartL = this.state.loggedUser.cart;
-        const i = cartL.findIndex(p=>p === pdId);
-        let updatedUser = this.state.loggedUser;
-        updatedUser.cart.splice(i,1);
-        this.updateLoggedUser(updatedUser);
     }
     render() {
         return (
             <React.Fragment>
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
-                    {this.state.cartList.map( cart => 
+                    {this.state.cartList.length ? (this.state.cartList.map( cart => 
                         <ProductFC key={cart._id} product={cart}
-                        remove={this.removeCart}/>    
+                        remove={this.removeCart} acart={true}/>    
+                    )) : (
+                        <div className={`alert-display d_flex w_100 body_h`}>
+                            <h1 className={`m_auto`}>Empty</h1>
+                        </div>
                     )}
                 </div>
             </React.Fragment>

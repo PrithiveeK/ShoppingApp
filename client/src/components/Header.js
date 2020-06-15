@@ -9,12 +9,13 @@ class Header extends Component {
             <header className={`d_flex ${style['header-container']}`}>
                 {!this.props.show && 
                 <Link to='/home'><div className={style['back-arrow']}></div></Link>}
-                <h1 className={`flex_1 ${style['header-title']}`}>Shopping</h1>
+                <div className={`d_flex fd_col`}>
+                    <h1 className={`flex_1 ${style['header-title']}`}>Shopping</h1>
+                    <Link to='/admin'>Switch to admin</Link>
+                </div>
                 <div className={`d_flex ${style['user-container']}`}>
                     <div className={`d_flex fd_col ${style.user}`}>{this.props.user.username}<Link to="/">Logout</Link></div>
-                    {this.props.show && <FavCart fill={"red"} 
-                    cartLen={this.props.user.cart.length}
-                    favLen={this.props.user.fav.length}/>}
+                    {this.props.show && <FavCart fill={"red"} />}
                 </div>
             </header>
         );
