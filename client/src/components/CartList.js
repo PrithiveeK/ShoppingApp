@@ -7,7 +7,8 @@ class CartList extends Component {
         super(props);
         this.state = {
             loggedUser: JSON.parse(localStorage.getItem('loggedInUser')),
-            cartList: []
+            cartList: [],
+            cartCount: []
         }
     }
     componentDidMount(){
@@ -22,7 +23,8 @@ class CartList extends Component {
             if(data.status)
             this.setState({
                 ...this.state,
-                cartList: data.data
+                cartList: data.data,
+                cartCount: data.count
             });
         });
     }
@@ -47,9 +49,9 @@ class CartList extends Component {
             <React.Fragment>
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
-                    {this.state.cartList.length ? (this.state.cartList.map( cart => 
+                    {this.state.cartList.length ? (this.state.cartList.map( (cart,i) => 
                         <ProductFC key={cart._id} product={cart}
-                        remove={this.removeCart} acart={true}/>    
+                        remove={this.removeCart} acart={this.state.cartCount[i].count}/>    
                     )) : (
                         <div className={`alert-display d_flex w_100 body_h`}>
                             <h1 className={`m_auto`}>Empty</h1>

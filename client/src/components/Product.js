@@ -44,10 +44,10 @@ class Product extends Component {
         const {producttitle, productdesc} = this.props.product;
         return (
             <React.Fragment>
-                <div className={`br_8 p_rel bs_small ${style.product}`}
-                onClick={()=>this.imgRef.current.style.display = "flex"}>
+                <div className={`br_8 p_rel bs_small ${style.product}`}>
                     {!!this.state.imgSrc.length && 
-                    <div className={`${style['img-container']}`}>
+                    <div className={`${style['img-container']}`}
+                    onClick={()=>this.imgRef.current.style.display = "flex"}>
                         <ImgFile folder={this.state.folder} src={this.state.imgSrc} />
                     </div>}
                     <div className={`w_100 br_8 ${style['product-description']}`} >

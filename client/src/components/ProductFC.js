@@ -16,31 +16,8 @@ class ProductFC extends Component {
     componentDidMount(){
         this.getProductImg();
         this.imgRef.current.style.display = "none";
-        if(this.props.acart) this.getCartCount();
     }
-    componentDidUpdate(prevProps, prevState){
-        if(this.props.acart){
-     		this.getCartCount(prevState);       
-        }
-    }
-    getCartCount = (prevState = {cart: -1}) => {
-    	fetch(`http://localhost:5000/api/cart/${this.props.product._id}/count`,{
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'client': JSON.parse(localStorage.getItem('loggedInUser'))._id
-                }    
-            }).then(res=>res.json())
-            .then(data=>{
-                if(data.status && this.state.cart !== prevState.cart){
-                alert('hi');
-                    this.setState({
-                        ...this.state,
-                        cart: data.data
-                    });
-                }
-            }).catch(err=>{console.log(err);alert("error!")});
-     }
+
     getProductImg(){
         fetch(`http://localhost:5000/api/product/mics/${this.props.product._id}`,{
             method: 'GET',
@@ -52,7 +29,7 @@ class ProductFC extends Component {
         .then(data=>{
             if(data.status){
                 this.setState({
-                    ...this.state,
+                    cart: this.props.acart ? this.props.acart : 0,
                     folder: data.folder,
                     src: data.files
                 });
@@ -76,7 +53,7 @@ class ProductFC extends Component {
                         <p className={`w_100 br_8 ${style['desc-data']}`}>{productdesc || "No Description"}</p>
                         <div className={`d_flex fd_col ${style['btn-container']}`}>
                             <button className={`flex_1 ${style['purchase-btn']}`}>Buy Now
-                                {this.props.acart && ` X ${this.state.cart}`}
+                                {this.props.acart && ` X ${this.props.acart}`}
                             </button>
                             <button className={`flex_1 ${style['remove-btn']}`}
                             onClick={this.removeItem}>Remove</button>

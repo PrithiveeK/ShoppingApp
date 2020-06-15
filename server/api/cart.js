@@ -9,7 +9,11 @@ router.get('/all', async (req, res)=>{
             "SELECT * FROM products WHERE _id IN (SELECT prod_id FROM usercart WHERE user_id = $1)",
             [+req.header('client')]
         );
-        res.send({status: true, data: cartProducts.rows});
+        const count = await pool.query(
+            "SELECT prod_id,Count(*) AS count FROM usercart WHERE user_id = $1 GROUP BY prod_id",
+            [+req.header('client')]
+        );
+        res.send({status: true, data: cartProducts.rows, count: count.rows});
     }catch(err){
         console.log(err);
         res.send({status: false});
