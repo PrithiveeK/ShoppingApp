@@ -1,15 +1,22 @@
 const router = require('express').Router();
-const pool = require('../config/database');
+const {userfav: UserFav, products: Products, Sequelize} = require('../models');
+const $in = Sequelize.Op.in;
 
 router.use(require('../util/middleware'));
 
 router.get('/all', async (req, res)=>{
     try{
-        const favProducts = await pool.query(
-            "SELECT * FROM products WHERE _id IN (SELECT prod_id FROM userfav WHERE user_id = $1)",
-            [+req.header('client')]
-        );
-        res.send({status: true, data: favProducts.rows});
+        const favs = await UserFav.findAll({
+            attributes: ['prod_id'], 
+            where: {user_id: +req.header('client')}
+        });
+        if(favs.length){
+            const favIds = favs.map(fav=>fav.prod_id);
+            const favProducts = await Products.findAll({where: {id: {[$in]: favIds}}});
+            res.send({status: true, data: favProducts});
+        }
+        else
+        res.send({status: true, data: []});
     }catch(err){
         console.log(err);
         res.send({status: false});
@@ -18,10 +25,7 @@ router.get('/all', async (req, res)=>{
 
 router.post('/:id/update', async (req,res) =>{
     try{
-        await pool.query(
-            "INSERT INTO userfav(user_id, prod_id) VALUES($1, $2)",
-            [+req.header('client'), +req.body.prodId]
-        );
+        await UserFav.create({prod_id: +req.params.id, user_id: +req.header('client')});
         res.send({status: true, message: 'updated fav!'});
     }catch(err){
         console.log(err);
@@ -31,10 +35,7 @@ router.post('/:id/update', async (req,res) =>{
 
 router.delete('/:id/delete', async (req, res) => {
     try{
-        await pool.query(
-            "DELETE FROM userfav WHERE prod_id = $1 AND user_id = $2",
-            [+req.params.id, +req.header('client')]
-        );
+        await UserFav.destroy({where: {prod_id: +req.params.id, user_id: +req.header('client')}});
         res.send({status: true});
     }catch(err){
         console.log(err);

@@ -1,32 +1,22 @@
 const router = require('express').Router();
-const pool = require('../config/database');
+const {usercart: UserCart, products: Products, sequelize, Sequelize} = require('../models');
+const $in = Sequelize.Op.in;
 
 router.use(require('../util/middleware'));
 
 router.get('/all', async (req, res)=>{
     try{
-        const cartProducts = await pool.query(
-            "SELECT * FROM products WHERE _id IN (SELECT prod_id FROM usercart WHERE user_id = $1)",
-            [+req.header('client')]
-        );
-        const count = await pool.query(
-            "SELECT prod_id,Count(*) AS count FROM usercart WHERE user_id = $1 GROUP BY prod_id",
-            [+req.header('client')]
-        );
-        res.send({status: true, data: cartProducts.rows, count: count.rows});
-    }catch(err){
-        console.log(err);
-        res.send({status: false});
-    }
-});
-
-router.get('/:id/count', async (req, res) => {
-    try{
-        const cartCount = await pool.query(
-            "SELECT * FROM usercart WHERE user_id = $1 AND prod_id = $2",
-            [+req.header('client'), +req.params.id]
-        );
-        res.send({status: true, data: cartCount.rowCount});
+        const count = await UserCart.findAll({
+            attributes: ['prod_id', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
+            where: {user_id: +req.header('client')},
+            group: ['prod_id']
+        });
+        if(count.length){
+            const prodIds = count.map(prod=>prod.prod_id);
+            const cartProducts = await Products.findAll({where: {id: {[$in]: prodIds}}});
+            res.send({status: true, data: cartProducts, count: count});
+        }
+        res.send({status: true, data: [], count: []});
     }catch(err){
         console.log(err);
         res.send({status: false});
@@ -35,10 +25,7 @@ router.get('/:id/count', async (req, res) => {
 
 router.post('/:id/update', async (req,res) =>{
     try{
-        await pool.query(
-            "INSERT INTO usercart(user_id, prod_id) VALUES($1, $2)",
-            [+req.header('client'), +req.body.prodId]
-        );
+        await UserCart.create({prod_id: +req.params.id, user_id: +req.header('client')});
         res.send({status: true, message: 'updated cart!'});
     }catch(err){
         console.log(err);
@@ -48,14 +35,11 @@ router.post('/:id/update', async (req,res) =>{
 
 router.delete('/:id/delete', async (req, res) => {
     try{
-        const delId = await pool.query(
-            "SELECT _id FROM usercart WHERE user_id = $1 AND prod_id = $2",
-            [+req.header('client'), +req.params.id]
-        );
-        await pool.query(
-            "DELETE FROM usercart WHERE _id = $1",
-            [delId.rows[0]._id]
-        );
+        const delId = await UserCart.findOne({
+            attributes: ['id'],
+            where: {prod_id: +req.params.id, user_id: +req.header('client')}
+        });
+        await UserCart.destroy({where: {id: delId.id}});
         res.send({status: true});
     }catch(err){
         console.log(err);

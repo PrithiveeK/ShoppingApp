@@ -34,8 +34,7 @@ class CartList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -50,7 +49,7 @@ class CartList extends Component {
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
                     {this.state.cartList.length ? (this.state.cartList.map( (cart,i) => 
-                        <ProductFC key={cart._id} product={cart}
+                        <ProductFC key={cart.id} product={cart}
                         remove={this.removeCart} acart={this.state.cartCount[i].count}/>    
                     )) : (
                         <div className={`alert-display d_flex w_100 body_h`}>

@@ -7,7 +7,6 @@ const cors = require('cors');
 app = express();
 app.use(cors());
 app.use(bodyParser.json());
-// app.use(express.static(__dirname, 'public'));
 
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../client/build')));

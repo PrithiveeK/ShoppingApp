@@ -3,7 +3,6 @@ import Slider from 'infinite-react-carousel';
 import style from '../cssModules/product.module.css';
 
 class ImgFile extends Component {
-
     render() {
         const uri = "http://localhost:5000/api/product/file";
         return (

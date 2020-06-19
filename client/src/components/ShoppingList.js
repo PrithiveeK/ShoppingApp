@@ -35,8 +35,7 @@ class ShoppingList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -49,8 +48,7 @@ class ShoppingList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -63,8 +61,7 @@ class ShoppingList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -77,8 +74,7 @@ class ShoppingList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -91,7 +87,7 @@ class ShoppingList extends Component {
                 <Header user={this.state.loggedUser} show={true}/>
                 {this.state.ProductDetails.length ? (<div className={`d_flex product-list`}>
                     {this.state.ProductDetails.map(pd=> 
-                    <Product key={pd._id} product={pd} 
+                    <Product key={pd.id} product={pd} 
                     FavCartAdder={[this.addFav, this.removeFav, this.addCart, this.removeCart]}/>)}
                 </div>) : (
                     <div className={`alert-display d_flex w_100 body_h`}>

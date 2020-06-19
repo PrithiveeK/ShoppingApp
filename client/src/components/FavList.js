@@ -36,8 +36,7 @@ class FavList extends Component {
             headers: {
                 'Content-Type': 'application/json',
                 'client': this.state.loggedUser._id
-            },
-            body: JSON.stringify({prodId})
+            }
         }).then(res=>res.json())
         .then(data=>{
             if(!data.status)
@@ -51,8 +50,8 @@ class FavList extends Component {
             <React.Fragment>
                 <Header user={this.state.loggedUser} show={false}/>
                 <div className={`d_flex product-list`}>
-                    {this.state.FavList.length ? (this.state.favList.map(fav => 
-                        <ProductFC key={fav._id} product={fav}
+                    {this.state.favList.length ? (this.state.favList.map(fav => 
+                        <ProductFC key={fav.id} product={fav}
                         remove={this.removeFav}/>    
                     )) : (
                         <div className={`alert-display d_flex w_100 body_h`}>
