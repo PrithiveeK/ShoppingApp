@@ -6,7 +6,7 @@ router.use(require('../util/middleware'));
 router.get('/all', async (req, res)=>{
     try{
         Products.findAll({
-            attributes: ['*',[sequelize.fn("COUNT", sequelize.col("*")), "count"]],
+            attributes: ['id','product_title','product_decs',[sequelize.fn("COUNT", sequelize.col("*")), "count"]],
             include: [{
                 model: UserCart,
                 where: {"userId": +req.header('client')},
@@ -14,6 +14,7 @@ router.get('/all', async (req, res)=>{
             }],
             group: ["products.id"]
         }).then(data=>{
+            data = data.map(d=>d.dataValues)
             res.send({status: true, data});
         });
     }catch(err){
