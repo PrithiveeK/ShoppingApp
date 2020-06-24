@@ -14,8 +14,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   usercart.associate = function(models) {
     // associations can be defined here
-    // models.usercart.belongsTo(models.users);
-    // models.usercart.belongsTo(models.products);
   };
   return usercart;
 };

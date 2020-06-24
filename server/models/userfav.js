@@ -14,8 +14,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   userfav.associate = function(models) {
     // associations can be defined here
-    // models.userfav.belongsTo(models.users);
-    // models.userfav.belongsTo(models.products);
   };
   return userfav;
 };
