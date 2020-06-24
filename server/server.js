@@ -15,7 +15,26 @@ if(process.env.NODE_ENV === 'production'){
         res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
     });
 }
-
+const {products, usercart,userfav,sequelize}=require('./models');
+products.findAll({
+    attributes: ['id','product_title','product_desc',[sequelize.fn("COUNT", sequelize.col("usercarts.productId")), "count"]],
+    include: [{
+        model: usercart,
+        required: false,
+        where: {"userId": 2},
+        attributes: []
+    },{
+        model: userfav,
+        required: false,
+        where: {"userId": 1},
+        attributes: ['id']
+    }],
+    group: ["products.id","userfav.id"]
+}).then(data=>{
+    data = data.map(d=>d.dataValues)
+    console.log(data);
+    // res.send({status: true, data});
+});
 
 app.use('/api/account/user',apis.user);
 app.use('/api/account/login',apis.login);

@@ -8,39 +8,16 @@ class Product extends Component {
     constructor(props){
         super(props);
         this.state ={
-            src: [],
-            isAFav: 0,
-            isInCart: 0
+            src: []
         };
         this.imgRef = React.createRef();
     }
 
     componentDidMount(){
         this.imgRef.current.style.display = "none";
-        this.getProductData();
         this.getImgFiles();
     }
-    getProductData = () => {
-        fetch(`http://localhost:5000/api/product/mics/${this.props.product.id}`,
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'client': JSON.parse(localStorage.getItem('loggedInUser'))._id
-            }
-        }).then(res=>res.json())
-        .then(data=>{
-            if(data.status){
-                this.setState({
-                    ...this.state,
-                    isAFav: data.isFav,
-                    isInCart: data.isCart
-                });
-            }else{
-                alert("error!");
-            }
-        }).catch(err => alert('error!'));
-    }
+
     getImgFiles = () => {
         fetch(`http://localhost:5000/api/product/${this.props.product.img_folder}/files`, {
             method: 'GET',
@@ -58,7 +35,9 @@ class Product extends Component {
     }
 
     render() {
-        const {product_title, product_desc, img_folder} = this.props.product;
+        const {product_title, product_desc, img_folder, count, userfav} = this.props.product;
+        isAFav = userfav!=null ? 1: 0;
+        isInCart = count;
         return (
             <React.Fragment>
                 <div className={`br_8 p_rel bs_small ${style.product}`}>
@@ -73,7 +52,7 @@ class Product extends Component {
                         <div className={`d_flex fd_col ${style['button-container']}`}>
                             <button className={`${style['purchase-btn']}`}>Buy Now</button>
                             <FavCart productId={this.props.product.id}
-                            fav={this.state.isAFav} cart={this.state.isInCart} 
+                            fav={isAFav} cart={isInCart} 
                             addFav={this.props.FavCartAdder[0]} 
                             removeFav={this.props.FavCartAdder[1]} 
                             addCart={this.props.FavCartAdder[2]}

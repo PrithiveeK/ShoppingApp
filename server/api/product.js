@@ -52,18 +52,6 @@ router.get('/', async (req, res, next)=>{
     });
 });
 
-router.get('/mics/:id', async (req, res) => {
-    try{
-        const isFav = await UserFav.findAll({where: {prod_id: +req.params.id, user_id: +req.header('client')}});
-        const isCart = await UserCart.findAll({where: {prod_id: +req.params.id, user_id: +req.header('client')}});
-        res.send({status: true, trust: true,
-            isFav: isFav.length, isCart: isCart.length});
-    }catch(err){
-        console.log(err);
-        res.send({status: false,trust: false, message: 'sorry, something went wrong'});
-    }
-});
-
 router.get('/:folder/files', async (req, res) => {
     fs.readdir(path.join(PATH, req.params.folder), (err, files) => {
         if(err)
@@ -97,8 +85,23 @@ router.post('/add', async (req, res) => {
 
 router.get('/all', async (req, res)=>{
     try{
-        const products = await Products.findAll({});
-        res.send({status: true, data: products});
+        const products = await Products.findAll({
+            attributes: ['id','product_title','product_desc',[sequelize.fn("COUNT", sequelize.col("usercarts.productId")), "count"]],
+            include: [{
+                model: usercart,
+                required: false,
+                where: {"userId": +req.header('client')},
+                attributes: []
+            },{
+                model: userfav,
+                required: false,
+                where: {"userId": +req.header('client')},
+                attributes: ['id']
+            }],
+            group: ["products.id","userfav.id"]
+        });
+        const data = products.map(p=>p.dataValues);
+        res.send({status: true, data});
     }catch(err){
         console.log(err);
         res.send({status: false});
