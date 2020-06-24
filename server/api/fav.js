@@ -1,22 +1,19 @@
 const router = require('express').Router();
-const {userfav: UserFav, products: Products, Sequelize} = require('../models');
-const $in = Sequelize.Op.in;
+const {userfav: UserFav, products: Products} = require('../models');
 
 router.use(require('../util/middleware'));
 
 router.get('/all', async (req, res)=>{
     try{
-        const favs = await UserFav.findAll({
-            attributes: ['prod_id'], 
-            where: {user_id: +req.header('client')}
+        Products.findAll({
+            include: [{
+                model: UserFav,
+                where: {"userId": +req.header('client')},
+                attributes: []
+            }]
+        }).then(data=>{
+            res.send({status: true, data});
         });
-        if(favs.length){
-            const favIds = favs.map(fav=>fav.prod_id);
-            const favProducts = await Products.findAll({where: {id: {[$in]: favIds}}});
-            res.send({status: true, data: favProducts});
-        }
-        else
-        res.send({status: true, data: []});
     }catch(err){
         console.log(err);
         res.send({status: false});

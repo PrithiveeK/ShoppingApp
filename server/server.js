@@ -16,6 +16,7 @@ if(process.env.NODE_ENV === 'production'){
     });
 }
 
+
 app.use('/api/account/user',apis.user);
 app.use('/api/account/login',apis.login);
 app.use('/api/account/signup',apis.signup);

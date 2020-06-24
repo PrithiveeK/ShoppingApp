@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   products.associate = function(models) {
     // associations can be defined here
+    models.products.hasOne(models.userfav, {foreignKey: {fieldName: 'productId'}});
+    models.products.hasMany(models.usercart, {foreignKey: {fieldName: 'productId'}});
   };
   return products;
 };

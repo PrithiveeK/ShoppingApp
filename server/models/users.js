@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   users.associate = function(models) {
     // associations can be defined here
+    models.users.hasOne(models.userfav, {foreignKey: 'id'});
+    models.users.hasOne(models.usercart, {foreignKey: 'id'});
   };
   return users;
 };

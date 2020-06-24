@@ -1,22 +1,21 @@
 const router = require('express').Router();
-const {usercart: UserCart, products: Products, sequelize, Sequelize} = require('../models');
-const $in = Sequelize.Op.in;
+const {usercart: UserCart, products: Products, sequelize} = require('../models');
 
 router.use(require('../util/middleware'));
 
 router.get('/all', async (req, res)=>{
     try{
-        const count = await UserCart.findAll({
-            attributes: ['prod_id', [sequelize.fn('COUNT', sequelize.col('id')), 'count']],
-            where: {user_id: +req.header('client')},
-            group: ['prod_id']
+        Products.findAll({
+            attributes: ['*',[sequelize.fn("COUNT", sequelize.col("*")), "count"]],
+            include: [{
+                model: UserCart,
+                where: {"userId": +req.header('client')},
+                attributes: []
+            }],
+            group: ["products.id"]
+        }).then(data=>{
+            res.send({status: true, data});
         });
-        if(count.length){
-            const prodIds = count.map(prod=>prod.prod_id);
-            const cartProducts = await Products.findAll({where: {id: {[$in]: prodIds}}});
-            res.send({status: true, data: cartProducts, count: count});
-        }
-        res.send({status: true, data: [], count: []});
     }catch(err){
         console.log(err);
         res.send({status: false});
